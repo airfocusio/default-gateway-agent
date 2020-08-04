@@ -1,0 +1,11 @@
+/bin
+/.go
+/.go-cache
+/.push-*
+/.container-*
+/.dockerfile-*
+
+# Emacs save files
+*~
+\#*\#
+.\#*

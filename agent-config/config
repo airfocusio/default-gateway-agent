@@ -1,0 +1,10 @@
+ipTables:
+  mark: 100
+ipRule:
+  table: 100
+  priority: 30000
+podNetwork:
+  cidr: 10.244.0.0/16
+gateways:
+  - ip: 172.17.0.1
+resyncInterval: 5s

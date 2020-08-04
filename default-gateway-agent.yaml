@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: default-gateway-agent
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: default-gateway-agent
+  template:
+    metadata:
+      labels:
+        k8s-app: default-gateway-agent
+    spec:
+      hostNetwork: true
+      containers:
+      - name: default-gateway-agent
+        image: choffmeister/default-gateway-agent-amd64:latest
+        imagePullPolicy: Always
+        # args: ["--cleanup"]
+        securityContext:
+          privileged: false
+          capabilities:
+            add: ["NET_ADMIN", "NET_RAW"]
+        volumeMounts:
+          - name: config
+            mountPath: /etc/config
+      volumes:
+        - name: config
+          configMap:
+            # Note this ConfigMap must be created in the same namespace as the daemon pods - this spec uses kube-system
+            name: default-gateway-agent
+            optional: false
+            items:
+              # The daemon looks for its config in a YAML file at /etc/config/default-gateway-agent
+              - key: config
+                path: default-gateway-agent
