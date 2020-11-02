@@ -157,6 +157,8 @@ func main() {
 
 	verflag.PrintAndExitIfRequested()
 
+	ServeMetrics()
+
 	m := NewGatewayDaemon(c)
 	if !*cleanupFlag {
 		m.Run()
@@ -458,6 +460,7 @@ func ensurePodNetworkDefaultRoute(m *GatewayDaemon) error {
 				if err != nil {
 					return fmt.Errorf("unable to create route %v: %v", route, err)
 				}
+				UpdateMetricDefaultGatewayIP(gatewayIP.String())
 				alreadyExists = true
 			}
 		} else {
@@ -476,6 +479,7 @@ func ensurePodNetworkDefaultRoute(m *GatewayDaemon) error {
 		if err != nil {
 			return fmt.Errorf("unable to create route %v: %v", route, err)
 		}
+		UpdateMetricDefaultGatewayIP(gatewayIP.String())
 	}
 
 	return nil

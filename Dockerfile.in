@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ARG_FROM
 
-MAINTAINER Michael Taufen <mtaufen@google.com>
 
+FROM alpine:latest AS alpine
+RUN apk add --update --no-cache ca-certificates
+
+FROM ARG_FROM AS builder
 ADD bin/ARG_ARCH/ARG_BIN /ARG_BIN
-
+COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENTRYPOINT ["/ARG_BIN"]
