@@ -453,6 +453,7 @@ func ensurePodNetworkDefaultRoute(m *GatewayDaemon) error {
 		if route.Dst == nil {
 			if route.Gw.String() == gatewayIP.String() {
 				alreadyExists = true
+				UpdateMetricDefaultGatewayIP(gatewayIP.String())
 			} else {
 				route := &netlink.Route{Gw: gatewayIP, Table: c.IPRule.Table}
 				glog.V(0).Infof("Updating default route %v\n", route)
