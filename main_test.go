@@ -24,7 +24,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/choffmeister/default-gateway-agent/cmd/default-gateway-agent/testing/fakefs"
+	"github.com/airfocusio/default-gateway-agent/internal"
 	iptest "k8s.io/kubernetes/pkg/util/iptables/testing"
 )
 
@@ -79,13 +79,13 @@ func TestConfigValidate(t *testing.T) {
 
 // specs for testing loading config from fs
 var syncConfigTests = []struct {
-	desc string            // human readable description of the fs used for the test e.g. "no config file"
-	fs   fakefs.FileSystem // filesystem interface
-	err  error             // expected error from GatewayDaemon.syncConfig(fs)
-	cfg  *AgentConfig      // expected values of the configuration after loading from fs
+	desc string              // human readable description of the fs used for the test e.g. "no config file"
+	fs   internal.FileSystem // filesystem interface
+	err  error               // expected error from GatewayDaemon.syncConfig(fs)
+	cfg  *AgentConfig        // expected values of the configuration after loading from fs
 }{
 	// valid yaml
-	{"valid yaml file, all keys", fakefs.StringFS{File: `
+	{"valid yaml file, all keys", internal.StringFS{File: `
 ipTables:
   mark: 1
 ipRule:
@@ -107,10 +107,10 @@ resyncInterval: 5s
 		ResyncInterval:  Duration(5 * time.Second)}},
 
 	// invalid yaml
-	{"invalid yaml file", fakefs.StringFS{File: `*`}, fmt.Errorf("yaml: did not find expected alphabetic or numeric character"), NewAgentConfigEmpty()},
+	{"invalid yaml file", internal.StringFS{File: `*`}, fmt.Errorf("yaml: did not find expected alphabetic or numeric character"), NewAgentConfigEmpty()},
 
 	// valid json
-	{"valid json file, all keys", fakefs.StringFS{File: `
+	{"valid json file, all keys", internal.StringFS{File: `
 {
   "ipTables": {"mark":1},
   "ipRule": {"table":1, "priority":30000},
@@ -129,10 +129,10 @@ resyncInterval: 5s
 			ResyncInterval:  Duration(5 * time.Second)}},
 
 	// invalid json
-	{"invalid json file", fakefs.StringFS{File: `{*`}, fmt.Errorf("invalid character '*' looking for beginning of object key string"), NewAgentConfigEmpty()},
+	{"invalid json file", internal.StringFS{File: `{*`}, fmt.Errorf("invalid character '*' looking for beginning of object key string"), NewAgentConfigEmpty()},
 
 	// file does not exist
-	{"no config file", fakefs.NotExistFS{}, nil, NewAgentConfigEmpty()}, // If the file does not exist, defaults should be used
+	{"no config file", internal.NotExistFS{}, nil, NewAgentConfigEmpty()}, // If the file does not exist, defaults should be used
 }
 
 // tests GatewayDaemon.syncConfig

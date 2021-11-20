@@ -17,7 +17,7 @@ The spec in `default-gateway-agent.yaml` specifies the `kube-system` namespace f
 TODO
 
 ```
-kubectl create configmap default-gateway-agent --from-file=agent-config --namespace=kube-system
+kubectl create configmap default-gateway-agent --from-file=default-gatway-agent-config.yaml --namespace=kube-system
 ```
 
 Note that we created the `ConfigMap` in the same namespace as the DaemonSet Pods, and named the `ConfigMap` to match the spec in `default-gateway-agent.yaml`. This is necessary for the `ConfigMap` to appear in the Pods' filesystems.
@@ -32,7 +32,7 @@ See [RELEASE](RELEASE.md).
 
 ## Developing
 
-Clone the repo to `$GOPATH/src/github.com/choffmeister/default-gateway-agent`.
+Clone the repo to `$GOPATH/src/github.com/airfocusio/default-gateway-agent`.
 
 The build tooling is based on [thockin/go-build-template](https://github.com/thockin/go-build-template).
 

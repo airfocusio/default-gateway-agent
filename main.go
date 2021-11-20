@@ -27,8 +27,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/choffmeister/default-gateway-agent/cmd/default-gateway-agent/testing/fakefs"
-	"github.com/sparrc/go-ping"
+	"github.com/airfocusio/default-gateway-agent/internal"
+	"github.com/go-ping/ping"
 	"github.com/vishvananda/netlink"
 	utilyaml "k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/apiserver/pkg/util/logs"
@@ -205,15 +205,15 @@ func (m *GatewayDaemon) RunCleanup() {
 }
 
 func (m *GatewayDaemon) osSyncConfig() error {
-	// the fakefs.FileSystem interface allows us to mock the fs from tests
-	// fakefs.DefaultFS implements fakefs.FileSystem using os.Stat and io/ioutil.ReadFile
-	var fs fakefs.FileSystem = fakefs.DefaultFS{}
+	// the internal.FileSystem interface allows us to mock the fs from tests
+	// internal.DefaultFS implements internal.FileSystem using os.Stat and io/ioutil.ReadFile
+	var fs internal.FileSystem = internal.DefaultFS{}
 	return m.syncConfig(fs)
 }
 
 // Syncs the config to the file at ConfigPath, or uses defaults if the file could not be found
 // Error if the file is found but cannot be parsed.
-func (m *GatewayDaemon) syncConfig(fs fakefs.FileSystem) error {
+func (m *GatewayDaemon) syncConfig(fs internal.FileSystem) error {
 	var err error
 	c := NewAgentConfig(*ignoreAllReservedRangesFlag)
 	defer func() {

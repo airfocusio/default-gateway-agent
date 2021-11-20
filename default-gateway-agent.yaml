@@ -15,7 +15,7 @@ spec:
       hostNetwork: true
       containers:
       - name: default-gateway-agent
-        image: choffmeister/default-gateway-agent-amd64:latest
+        image: ghcr.io/airfocusio/default-gateway-agent:latest
         imagePullPolicy: Always
         # args: ["--cleanup"]
         securityContext:
